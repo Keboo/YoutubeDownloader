@@ -1,0 +1,28 @@
+﻿<Page x:Class="YoutubeDownloader.Pages.About"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="About">
+
+    <Grid>
+        <TextBlock>
+            <Run FontSize="16">Create By: Kevin Bost</Run>
+            <LineBreak />
+            <Run>Source code available at:</Run>
+            <mui:BBCodeBlock BBCode="[url=https://github.com/Keboo/YoutubeDownloader]github[/url]" />
+            <LineBreak />
+            <LineBreak />
+            <Run>This application was built using</Run>
+            <LineBreak />
+            <mui:BBCodeBlock BBCode="[url=https://github.com/flagbug/YoutubeExtractor]YoutubeExtractor[/url]" />
+            <LineBreak />
+            <mui:BBCodeBlock BBCode="[url=http://mui.codeplex.com/]ModernUI[/url]" />
+            <LineBreak />
+            <mui:BBCodeBlock BBCode="[url=http://www.galasoft.ch/mvvm]MVVM Light[/url]" />
+        </TextBlock>
+    </Grid>
+</Page>

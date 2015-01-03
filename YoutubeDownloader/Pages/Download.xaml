@@ -1,0 +1,128 @@
+﻿<Page x:Class="YoutubeDownloader.Pages.Download"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ye="clr-namespace:YoutubeExtractor;assembly=YoutubeExtractor"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="Download"
+      DataContext="{Binding Download, Source={StaticResource Locator}}">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Paste in a link to a YouTube video" />
+        <DockPanel  Grid.Row="1">
+            <Button Content="Find Video" DockPanel.Dock="Right" 
+                    Command="{Binding FindVideoCommand}"
+                    CommandParameter="{Binding YoutubeUrl}"/>
+            <TextBox Text="{Binding YoutubeUrl, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
+        <GroupBox Header="Video Options" Grid.Row="2">
+            <GroupBox.Style>
+                <Style TargetType="GroupBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Videos.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </GroupBox.Style>
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Videos.Count, StringFormat='Found {0} formats'}" Grid.ColumnSpan="2" Margin="0,3"/>
+                <Label Content="Format" Grid.Column="0" Grid.Row="1"/>
+                <ComboBox ItemsSource="{Binding Videos}" 
+                          Grid.IsSharedSizeScope="True" 
+                          Grid.Column="1" Grid.Row="1"
+                          SelectedItem="{Binding SelectedVideo}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type ye:VideoInfo}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Resolution"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="VideoFormat"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="AudioFormat"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Resolution, Mode=OneWay, StringFormat='{}{0}p'}" />
+                                <TextBlock Text="{Binding VideoType, Mode=OneWay, StringFormat=' Video Format: {0} '}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding AudioType, Mode=OneWay, StringFormat='Audio Format: {0}'}" Grid.Column="2" />
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Label Content="Video" Grid.Column="0" Grid.Row="2" Margin="0,5"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Margin="0,5">
+                    <Run Text="Resolution:"/>
+                    <Run Text="{Binding SelectedVideo.Resolution, Mode=OneWay, StringFormat='{}{0}p'}"/>
+                    <Run Text="Format:"/>
+                    <Run Text="{Binding SelectedVideo.VideoType, Mode=OneWay}" />
+                </TextBlock>
+                
+                <Label Content="Audio" Grid.Column="0" Grid.Row="3" />
+                <TextBlock Grid.Column="1" Grid.Row="3">
+                    <Run Text="Bitrate:"/>
+                    <Run Text="{Binding SelectedVideo.AudioBitrate, Mode=OneWay, StringFormat='{}{0}kbps'}" />
+                    <Run Text="Format:"/>
+                    <Run Text="{Binding SelectedVideo.AudioType, Mode=OneWay}"/>
+                </TextBlock>
+            </Grid>
+        </GroupBox>
+        
+        <StackPanel Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Grid.Row="4">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedVideo}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <CheckBox Content="Download audio only" 
+                      IsChecked="{Binding AudioOnly}" 
+                      Margin="0,0,10,0" 
+                      VerticalAlignment="Center">
+                <CheckBox.Style>
+                    <Style TargetType="CheckBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedVideo.CanExtractAudio}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </CheckBox.Style>
+            </CheckBox>
+            <Button Command="{Binding DownloadFileCommand}" CommandParameter="{Binding SelectedVideo}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Content" Value="Download Video File" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AudioOnly}" Value="True">
+                                <Setter Property="Content" Value="Download Audio File" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>
