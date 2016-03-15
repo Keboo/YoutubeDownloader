@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>C:\Dev\YoutubeDownloader\deployment\prod\</PublishUrl>
-    <Install>false</Install>
+    <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
@@ -56,10 +56,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9805C81AC21A4F57872E9BFF41BF71CFCCE512CA</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>88188BB6AB5BD549EA9B3A0A257F7906C181DE89</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>YoutubeDownloader_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -183,7 +184,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="YoutubeDownloader_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
