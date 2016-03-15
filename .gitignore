@@ -187,6 +187,3 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-/YoutubeDownloader/Services/DialogService.cs
-/YoutubeDownloader/ViewModel/DownloadViewModel.cs
-/YoutubeDownloader/ViewModel/FileDownloadViewModel.cs
