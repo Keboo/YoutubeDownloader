@@ -42,28 +42,16 @@ namespace YoutubeDownloader.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
-
-            SimpleIoc.Default.Register<MainViewModel>();
+            
             SimpleIoc.Default.Register<DownloadViewModel>();
             SimpleIoc.Default.Register<FileDownloadViewModel>();
             SimpleIoc.Default.Register<IDialogService, DialogService>();
         }
 
-        public MainViewModel Main
-        {
-            get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
-        }
+        public DownloadViewModel Download => ServiceLocator.Current.GetInstance<DownloadViewModel>();
 
-        public DownloadViewModel Download
-        {
-            get { return ServiceLocator.Current.GetInstance<DownloadViewModel>(); }
-        }
+        public FileDownloadViewModel FileDownload => ServiceLocator.Current.GetInstance<FileDownloadViewModel>();
 
-        public FileDownloadViewModel FileDownload
-        {
-            get { return ServiceLocator.Current.GetInstance<FileDownloadViewModel>(); }
-        }
-        
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

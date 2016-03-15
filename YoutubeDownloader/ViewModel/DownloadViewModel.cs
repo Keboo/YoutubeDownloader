@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
+﻿using System.Windows.Data;
 using FirstFloor.ModernUI.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -24,7 +23,7 @@ namespace YoutubeDownloader.ViewModel
 
         public DownloadViewModel( IDialogService dialogService )
         {
-            if ( dialogService == null ) throw new ArgumentNullException( "dialogService" );
+            if ( dialogService == null ) throw new ArgumentNullException( nameof(dialogService) );
             _DialogService = dialogService;
             _FindVideoCommand = new RelayCommand<string>( OnFindVideo, CanFindVideo );
             _DownloadFileCommand = new RelayCommand<VideoInfo>( OnDownloadFile, CanDownloadFile );
@@ -45,20 +44,11 @@ namespace YoutubeDownloader.ViewModel
             { }
         }
 
-        public ObservableCollection<VideoInfo> Videos
-        {
-            get { return _Videos; }
-        }
+        public ObservableCollection<VideoInfo> Videos => _Videos;
 
-        public ICommand FindVideoCommand
-        {
-            get { return _FindVideoCommand; }
-        }
+        public ICommand FindVideoCommand => _FindVideoCommand;
 
-        public ICommand DownloadFileCommand
-        {
-            get { return _DownloadFileCommand; }
-        }
+        public ICommand DownloadFileCommand => _DownloadFileCommand;
 
         private string _YoutubeUrl;
         public string YoutubeUrl

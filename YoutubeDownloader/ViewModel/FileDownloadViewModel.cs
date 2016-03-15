@@ -33,16 +33,13 @@ namespace YoutubeDownloader.ViewModel
 
         public void CancelDownload()
         {
-            if ( _TokenSource != null )
-            {
-                _TokenSource.Cancel();
-            }
+            _TokenSource?.Cancel();
         }
 
         public void StartVideoDownload( VideoInfo video, string destinationFile )
         {
-            if ( video == null ) throw new ArgumentNullException( "video" );
-            if ( destinationFile == null ) throw new ArgumentNullException( "destinationFile" );
+            if ( video == null ) throw new ArgumentNullException( nameof(video) );
+            if ( destinationFile == null ) throw new ArgumentNullException( nameof(destinationFile) );
 
             var downloader = new VideoDownloader(video, destinationFile);
             downloader.DownloadProgressChanged += OnDownloadProgressChanged;
@@ -51,8 +48,8 @@ namespace YoutubeDownloader.ViewModel
 
         public void StartAudioDownload( VideoInfo video, string destinationFile )
         {
-            if ( video == null ) throw new ArgumentNullException( "video" );
-            if ( destinationFile == null ) throw new ArgumentNullException( "destinationFile" );
+            if ( video == null ) throw new ArgumentNullException( nameof(video) );
+            if ( destinationFile == null ) throw new ArgumentNullException( nameof(destinationFile) );
 
             var downloader = new AudioDownloader( video, destinationFile );
             downloader.DownloadProgressChanged += OnDownloadProgressChanged;

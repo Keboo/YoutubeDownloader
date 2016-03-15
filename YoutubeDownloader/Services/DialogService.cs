@@ -34,10 +34,7 @@ namespace YoutubeDownloader.Services
         {
             var result = ModernDialog.ShowMessage( message, title,
                 string.IsNullOrWhiteSpace( buttonCancelText ) ? MessageBoxButton.OKCancel : MessageBoxButton.OK );
-            if ( afterHideCallback != null )
-            {
-                afterHideCallback( result == MessageBoxResult.OK );
-            }
+            afterHideCallback?.Invoke( result == MessageBoxResult.OK );
             return Task.FromResult( true );
         }
 
