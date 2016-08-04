@@ -4,10 +4,11 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ye="clr-namespace:YoutubeExtractor;assembly=YoutubeExtractor"
+      xmlns:vm="clr-namespace:YoutubeDownloader.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="Download"
-      DataContext="{Binding Download, Source={StaticResource Locator}}">
+      d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=vm:DownloadViewModel}">
     
     <Grid>
         <Grid.RowDefinitions>

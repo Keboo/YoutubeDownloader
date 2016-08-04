@@ -10,12 +10,10 @@ namespace YoutubeDownloader.Controls
     {
         public DownloadingControl()
         {
+            DataContext = ViewModel = new FileDownloadViewModel();
             InitializeComponent();
         }
 
-        public FileDownloadViewModel ViewModel
-        {
-            get { return (FileDownloadViewModel) DataContext; }
-        }
+        public FileDownloadViewModel ViewModel { get; }
     }
 }

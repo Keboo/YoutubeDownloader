@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using AutoDI;
 using YoutubeDownloader.Controls;
 using YoutubeExtractor;
 
@@ -21,7 +22,7 @@ namespace YoutubeDownloader.ViewModel
         private readonly RelayCommand<string> _FindVideoCommand;
         private readonly RelayCommand<VideoInfo> _DownloadFileCommand;
 
-        public DownloadViewModel( IDialogService dialogService )
+        public DownloadViewModel( [Dependency]IDialogService dialogService = null )
         {
             if ( dialogService == null ) throw new ArgumentNullException( nameof(dialogService) );
             _DialogService = dialogService;
