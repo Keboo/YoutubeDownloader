@@ -71,8 +71,8 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoDI, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoDI.Fody.1.0.21\lib\net45\AutoDI.dll</HintPath>
+    <Reference Include="AutoDI, Version=1.1.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoDI.Fody.1.1.23\lib\net45\AutoDI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FirstFloor.ModernUI, Version=1.0.9.0, Culture=neutral, PublicKeyToken=bc9b0c37bf06c6a9, processorArchitecture=MSIL">
