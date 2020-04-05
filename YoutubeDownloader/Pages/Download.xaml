@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ye="clr-namespace:YoutubeExtractor;assembly=YoutubeExtractor"
+      xmlns:ye="clr-namespace:YoutubeExplode.Models.MediaStreams;assembly=YoutubeExplode"
       xmlns:vm="clr-namespace:YoutubeDownloader.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
@@ -53,7 +53,7 @@
                           Grid.Column="1" Grid.Row="1"
                           SelectedItem="{Binding SelectedVideo}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type ye:VideoInfo}">
+                        <DataTemplate DataType="{x:Type ye:MuxedStreamInfo}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="Resolution"/>
@@ -61,8 +61,8 @@
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="AudioFormat"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Resolution, Mode=OneWay, StringFormat='{}{0}p'}" />
-                                <TextBlock Text="{Binding VideoType, Mode=OneWay, StringFormat=' Video Format: {0} '}" Grid.Column="1"/>
-                                <TextBlock Text="{Binding AudioType, Mode=OneWay, StringFormat='Audio Format: {0}'}" Grid.Column="2" />
+                                <TextBlock Text="{Binding VideoEncoding, Mode=OneWay, StringFormat=' Video Format: {0} '}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding AudioEncoding, Mode=OneWay, StringFormat='Audio Format: {0}'}" Grid.Column="2" />
                             </Grid>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -73,15 +73,13 @@
                     <Run Text="Resolution:"/>
                     <Run Text="{Binding SelectedVideo.Resolution, Mode=OneWay, StringFormat='{}{0}p'}"/>
                     <Run Text="Format:"/>
-                    <Run Text="{Binding SelectedVideo.VideoType, Mode=OneWay}" />
+                    <Run Text="{Binding SelectedVideo.VideoEncoding, Mode=OneWay}" />
                 </TextBlock>
                 
                 <Label Content="Audio" Grid.Column="0" Grid.Row="3" />
                 <TextBlock Grid.Column="1" Grid.Row="3">
-                    <Run Text="Bitrate:"/>
-                    <Run Text="{Binding SelectedVideo.AudioBitrate, Mode=OneWay, StringFormat='{}{0}kbps'}" />
                     <Run Text="Format:"/>
-                    <Run Text="{Binding SelectedVideo.AudioType, Mode=OneWay}"/>
+                    <Run Text="{Binding SelectedVideo.AudioEncoding, Mode=OneWay}"/>
                 </TextBlock>
             </Grid>
         </GroupBox>
@@ -98,7 +96,7 @@
                     </Style.Triggers>
                 </Style>
             </StackPanel.Style>
-            <CheckBox Content="Download audio only" 
+            <!--<CheckBox Content="Download audio only" 
                       IsChecked="{Binding AudioOnly}" 
                       Margin="0,0,10,0" 
                       VerticalAlignment="Center">
@@ -111,16 +109,16 @@
                         </Style.Triggers>
                     </Style>
                 </CheckBox.Style>
-            </CheckBox>
+            </CheckBox>-->
             <Button Command="{Binding DownloadFileCommand}" CommandParameter="{Binding SelectedVideo}">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Content" Value="Download Video File" />
-                        <Style.Triggers>
+                        <!--<Style.Triggers>
                             <DataTrigger Binding="{Binding AudioOnly}" Value="True">
                                 <Setter Property="Content" Value="Download Audio File" />
                             </DataTrigger>
-                        </Style.Triggers>
+                        </Style.Triggers>-->
                     </Style>
                 </Button.Style>
             </Button>

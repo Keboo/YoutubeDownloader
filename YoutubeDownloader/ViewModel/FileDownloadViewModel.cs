@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using YoutubeExtractor;
+using YoutubeExplode;
+using YoutubeExplode.Models.MediaStreams;
 
 namespace YoutubeDownloader.ViewModel
 {
@@ -14,14 +16,14 @@ namespace YoutubeDownloader.ViewModel
         public string Title
         {
             get { return _Title; }
-            set { Set( ref _Title, value ); }
+            set { Set(ref _Title, value); }
         }
 
         private double _DownloadPercentage;
         public double DownloadPercentage
         {
             get { return _DownloadPercentage; }
-            set { Set( ref _DownloadPercentage, value ); }
+            set { Set(ref _DownloadPercentage, value); }
         }
 
         private bool _DownloadFinished;
@@ -36,46 +38,17 @@ namespace YoutubeDownloader.ViewModel
             _TokenSource?.Cancel();
         }
 
-        public void StartVideoDownload( VideoInfo video, string destinationFile )
+        public async Task DownloadFile(MuxedStreamInfo video, string destinationFile)
         {
-            if ( video == null ) throw new ArgumentNullException( nameof(video) );
-            if ( destinationFile == null ) throw new ArgumentNullException( nameof(destinationFile) );
+            if (video is null) throw new ArgumentNullException(nameof(video));
+            if (destinationFile is null) throw new ArgumentNullException(nameof(destinationFile));
 
-            var downloader = new VideoDownloader(video, destinationFile);
-            downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-            StartDownload( downloader );
-        }
-
-        public void StartAudioDownload( VideoInfo video, string destinationFile )
-        {
-            if ( video == null ) throw new ArgumentNullException( nameof(video) );
-            if ( destinationFile == null ) throw new ArgumentNullException( nameof(destinationFile) );
-
-            var downloader = new AudioDownloader( video, destinationFile );
-            downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-            StartDownload( downloader );
-        }
-
-        private void StartDownload( Downloader downloader )
-        {
-            if ( downloader.Video.RequiresDecryption )
-            {
-                DownloadUrlResolver.DecryptDownloadUrl( downloader.Video );
-            }
-            Title = downloader.Video.Title;
-
+            var client = new YoutubeClient();
+            string ext = video.Container.GetFileExtension();
             _TokenSource = new CancellationTokenSource();
-            downloader.DownloadFinished += (sender, e) => DownloadFinished = true;
-            Task.Run( () => downloader.Execute(), _TokenSource.Token );
-        }
 
-        private void OnDownloadProgressChanged( object sender, ProgressEventArgs e )
-        {
-            if ( _TokenSource != null && _TokenSource.IsCancellationRequested )
-            {
-                e.Cancel = true;
-            }
-            DownloadPercentage = e.ProgressPercentage;
+            await client.DownloadMediaStreamAsync(video, Path.ChangeExtension(destinationFile, ext), new Progress<double>(x => DownloadPercentage = x * 100), _TokenSource.Token);
+            DownloadFinished = true;
         }
     }
 }
