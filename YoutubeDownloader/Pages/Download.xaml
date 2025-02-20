@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ye="clr-namespace:YoutubeExplode.Models.MediaStreams;assembly=YoutubeExplode"
+      xmlns:ye="clr-namespace:YoutubeExplode.Videos.Streams;assembly=YoutubeExplode"
       xmlns:vm="clr-namespace:YoutubeDownloader.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
@@ -52,34 +52,43 @@
                           Grid.IsSharedSizeScope="True" 
                           Grid.Column="1" Grid.Row="1"
                           SelectedItem="{Binding SelectedVideo}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type ye:MuxedStreamInfo}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Resolution"/>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="VideoFormat"/>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="AudioFormat"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Resolution, Mode=OneWay, StringFormat='{}{0}p'}" />
-                                <TextBlock Text="{Binding VideoEncoding, Mode=OneWay, StringFormat=' Video Format: {0} '}" Grid.Column="1"/>
-                                <TextBlock Text="{Binding AudioEncoding, Mode=OneWay, StringFormat='Audio Format: {0}'}" Grid.Column="2" />
-                            </Grid>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
+                  <ComboBox.Resources>
+                    <DataTemplate DataType="{x:Type ye:IVideoStreamInfo}">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto" SharedSizeGroup="Resolution"/>
+                          <ColumnDefinition Width="Auto" SharedSizeGroup="VideoFormat"/>
+                          <ColumnDefinition Width="Auto" SharedSizeGroup="AudioFormat"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding VideoResolution, Mode=OneWay, StringFormat='{}{0}p'}" />
+                        <TextBlock Text="{Binding VideoCodec, Mode=OneWay, StringFormat='Video Format: {0}'}" Grid.Column="1"/>
+                      </Grid>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type ye:IAudioStreamInfo}">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto" SharedSizeGroup="Resolution"/>
+                          <ColumnDefinition Width="Auto" SharedSizeGroup="AudioFormat"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Bitrate, Mode=OneWay, StringFormat='{}{0}p'}" />
+                        <TextBlock Text="{Binding AudioCodec, Mode=OneWay, StringFormat='Audio Format: {0}'}" Grid.Column="2" />
+                      </Grid>
+                    </DataTemplate>
+                  </ComboBox.Resources>
                 </ComboBox>
 
                 <Label Content="Video" Grid.Column="0" Grid.Row="2" Margin="0,5"/>
                 <TextBlock Grid.Column="1" Grid.Row="2" Margin="0,5">
                     <Run Text="Resolution:"/>
-                    <Run Text="{Binding SelectedVideo.Resolution, Mode=OneWay, StringFormat='{}{0}p'}"/>
+                    <Run Text="{Binding SelectedVideo.VideoResolution, Mode=OneWay, StringFormat='{}{0}p'}"/>
                     <Run Text="Format:"/>
-                    <Run Text="{Binding SelectedVideo.VideoEncoding, Mode=OneWay}" />
+                    <Run Text="{Binding SelectedVideo.VideoCodec, Mode=OneWay}" />
                 </TextBlock>
                 
                 <Label Content="Audio" Grid.Column="0" Grid.Row="3" />
                 <TextBlock Grid.Column="1" Grid.Row="3">
                     <Run Text="Format:"/>
-                    <Run Text="{Binding SelectedVideo.AudioEncoding, Mode=OneWay}"/>
+                    <Run Text="{Binding SelectedVideo.AudioCodec, Mode=OneWay}"/>
                 </TextBlock>
             </Grid>
         </GroupBox>

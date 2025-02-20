@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using YoutubeExplode;
-using YoutubeExplode.Models.MediaStreams;
+using YoutubeExplode.Videos.Streams;
 
 namespace YoutubeDownloader.ViewModel
 {
@@ -38,16 +38,18 @@ namespace YoutubeDownloader.ViewModel
             _TokenSource?.Cancel();
         }
 
-        public async Task DownloadFile(MuxedStreamInfo video, string destinationFile)
+        public async Task DownloadFile(IStreamInfo streamInfo, string destinationFile)
         {
-            if (video is null) throw new ArgumentNullException(nameof(video));
+            if (streamInfo is null) throw new ArgumentNullException(nameof(streamInfo));
             if (destinationFile is null) throw new ArgumentNullException(nameof(destinationFile));
 
             var client = new YoutubeClient();
-            string ext = video.Container.GetFileExtension();
+            string ext = streamInfo.Container.Name;
             _TokenSource = new CancellationTokenSource();
 
-            await client.DownloadMediaStreamAsync(video, Path.ChangeExtension(destinationFile, ext), new Progress<double>(x => DownloadPercentage = x * 100), _TokenSource.Token);
+            string filePath = Path.ChangeExtension(destinationFile, ext);
+            Progress<double> progress = new Progress<double>(x => DownloadPercentage = x * 100);
+            await client.Videos.Streams.DownloadAsync(streamInfo, filePath, progress, _TokenSource.Token);
             DownloadFinished = true;
         }
     }

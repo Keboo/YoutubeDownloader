@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using YoutubeDownloader.Services;
 using YoutubeDownloader.ViewModel;
 
 namespace YoutubeDownloader.Pages
@@ -10,7 +11,7 @@ namespace YoutubeDownloader.Pages
     {
         public Download()
         {
-            DataContext = new DownloadViewModel();
+            DataContext = new DownloadViewModel(new DialogService());
             InitializeComponent();
         }
     }

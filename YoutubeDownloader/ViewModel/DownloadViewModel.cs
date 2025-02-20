@@ -1,19 +1,18 @@
-﻿using AutoDI;
-using FirstFloor.ModernUI.Windows.Controls;
+﻿using FirstFloor.ModernUI.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using YoutubeDownloader.Controls;
 using YoutubeExplode;
-using YoutubeExplode.Models.MediaStreams;
+using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.Streams;
 
 namespace YoutubeDownloader.ViewModel
 {
@@ -21,14 +20,14 @@ namespace YoutubeDownloader.ViewModel
     {
         private readonly IDialogService _DialogService;
         private readonly RelayCommand<string> _FindVideoCommand;
-        private readonly RelayCommand<MuxedStreamInfo> _DownloadFileCommand;
+        private readonly RelayCommand<IStreamInfo> _DownloadFileCommand;
 
-        public DownloadViewModel([Dependency]IDialogService dialogService = null)
+        public DownloadViewModel(IDialogService dialogService)
         {
             if (dialogService == null) throw new ArgumentNullException(nameof(dialogService));
             _DialogService = dialogService;
             _FindVideoCommand = new RelayCommand<string>(OnFindVideo, CanFindVideo);
-            _DownloadFileCommand = new RelayCommand<MuxedStreamInfo>(OnDownloadFile, CanDownloadFile);
+            _DownloadFileCommand = new RelayCommand<IStreamInfo>(OnDownloadFile, CanDownloadFile);
             try
             {
                 if (Clipboard.ContainsText())
@@ -46,7 +45,7 @@ namespace YoutubeDownloader.ViewModel
             { }
         }
 
-        public ObservableCollection<MuxedStreamInfo> Videos { get; } = new ObservableCollection<MuxedStreamInfo>();
+        public ObservableCollection<IStreamInfo> Videos { get; } = new ObservableCollection<IStreamInfo>();
 
         public ICommand FindVideoCommand => _FindVideoCommand;
 
@@ -72,8 +71,8 @@ namespace YoutubeDownloader.ViewModel
             set { Set(ref _Title, value); }
         }
 
-        private MuxedStreamInfo _SelectedVideo;
-        public MuxedStreamInfo SelectedVideo
+        private IStreamInfo _SelectedVideo;
+        public IStreamInfo SelectedVideo
         {
             get { return _SelectedVideo; }
             set
@@ -104,20 +103,17 @@ namespace YoutubeDownloader.ViewModel
             try
             {
                 Videos.Clear();
-                var id = YoutubeClient.ParseVideoId(url);
-                var client = new YoutubeClient();
-
+                YoutubeClient client = new YoutubeClient();
+                var id = VideoId.Parse(url);
                 //Ver video info
-                var video = await client.GetVideoAsync(id);
+                var video = await client.Videos.GetAsync(id);
                 Title = video?.Title;
 
                 // Get metadata for all streams in this video
-                var streamInfoSet = await client.GetVideoMediaStreamInfosAsync(id);
+                var streamInfoSet = await client.Videos.Streams.GetManifestAsync(id);
 
                 // Select one of the streams, e.g. highest quality muxed stream
-                foreach (MuxedStreamInfo streamInfo in streamInfoSet.Muxed
-                    .OrderByDescending(x => x.VideoQuality)
-                    .ThenByDescending(x => x.Resolution.Width * x.Resolution.Height))
+                foreach (IStreamInfo streamInfo in streamInfoSet.Streams)
                 {
                     Videos.Add(streamInfo);
                 }
@@ -133,15 +129,15 @@ namespace YoutubeDownloader.ViewModel
             return !string.IsNullOrWhiteSpace(url);
         }
 
-        private bool CanDownloadFile(MuxedStreamInfo video)
+        private bool CanDownloadFile(IStreamInfo video)
         {
             return video != null;
         }
 
-        private void OnDownloadFile(MuxedStreamInfo video)
+        private void OnDownloadFile(IStreamInfo video)
         {
             string fileFilter =
-                "Video|*" + video.Container.GetFileExtension();
+                "Video|*" + video.Container.Name;
             var saveFileDialog = new SaveFileDialog
             {
                 Title = "Save File",
