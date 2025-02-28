@@ -1,14 +1,22 @@
-﻿
-namespace YoutubeDownloader
+﻿using System.Windows.Input;
+
+namespace YoutubeDownloader;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow 
+    public MainWindow(MainWindowViewModel viewModel)
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        DataContext = viewModel;
+        InitializeComponent();
+
+        CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, OnClose));
+    }
+
+    private void OnClose(object sender, ExecutedRoutedEventArgs e)
+    {
+        Close();
     }
 }
