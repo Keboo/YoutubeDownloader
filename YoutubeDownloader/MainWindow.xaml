@@ -1,6 +1,7 @@
 ﻿<Window x:Class="YoutubeDownloader.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:about="clr-namespace:YoutubeDownloader.About"
+        xmlns:download="clr-namespace:YoutubeDownloader.Download"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,6 +17,10 @@
     <materialDesign:DialogHost.Resources>
       <DataTemplate DataType="{x:Type about:AboutViewModel}">
         <about:AboutDialog />
+      </DataTemplate>
+
+      <DataTemplate DataType="{x:Type download:DownloadViewModel}">
+        <download:DownloadDialog />
       </DataTemplate>
     </materialDesign:DialogHost.Resources>
 
@@ -44,8 +49,12 @@
         <TextBlock Text="Paste in a link to a YouTube video" />
         <DockPanel  Grid.Row="1">
           <Button Content="Find Video" DockPanel.Dock="Right" 
-                Command="{Binding FindVideoCommand}"
-                CommandParameter="{Binding YoutubeUrl}"/>
+                  Command="{Binding FindVideoCommand}"
+                  CommandParameter="{Binding YoutubeUrl}"
+                  Margin="8,0,0,0"/>
+          <ProgressBar DockPanel.Dock="Bottom" Height="2" IsIndeterminate="True"
+                       Margin="0,4,0,0"
+                       Visibility="{Binding FindVideoCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
           <TextBox Text="{Binding YoutubeUrl, UpdateSourceTrigger=PropertyChanged}"/>
         </DockPanel>
         <GroupBox Header="Video Options" Grid.Row="2">

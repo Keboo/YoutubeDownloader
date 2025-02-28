@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO.Packaging;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +10,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 
 using YoutubeDownloader.About;
+using YoutubeDownloader.Download;
 
 using YoutubeExplode;
 using YoutubeExplode.Videos;
@@ -23,16 +22,18 @@ public partial class MainWindowViewModel : ObservableObject
 {
     //private readonly IDialogService _dialogService;
     private readonly Func<AboutViewModel> _aboutViewModelFactory;
+    private readonly Func<DownloadViewModel> _downloadViewModelFactory;
 
-
-    public MainWindowViewModel(Func<AboutViewModel> aboutViewModelFactory)
+    public MainWindowViewModel(
+        Func<AboutViewModel> aboutViewModelFactory,
+        Func<DownloadViewModel> downloadViewModelFactory)
     {
         /*
         if (dialogService == null) throw new ArgumentNullException(nameof(dialogService));
         _dialogService = dialogService;
         */
         _aboutViewModelFactory = aboutViewModelFactory;
-
+        _downloadViewModelFactory = downloadViewModelFactory;
         try
         {
             if (Clipboard.ContainsText())
@@ -102,7 +103,7 @@ public partial class MainWindowViewModel : ObservableObject
     private static bool CanFindVideo(string? url) => !string.IsNullOrWhiteSpace(url);
 
     [RelayCommand(CanExecute = nameof(CanDownloadFile))]
-    private void OnDownloadFile(IStreamInfo? video)
+    private async Task OnDownloadFile(IStreamInfo? video)
     {
         string fileFilter =
             "Video|*" + video!.Container.Name;
@@ -117,37 +118,11 @@ public partial class MainWindowViewModel : ObservableObject
 
         if (saveFileDialog.ShowDialog() == true)
         {
-            //var downloadControl = new DownloadingControl();
-            //var downloadingVM = downloadControl.ViewModel;
-            //var dlg = new ModernDialog
-            //{
-            //    Title = "Downloading File",
-            //    Content = downloadControl
-            //};
-            //dlg.OkButton.Content = "_done";
-            //dlg.OkButton.SetBinding(UIElement.IsEnabledProperty,
-            //    new Binding("DownloadFinished")
-            //    {
-            //        Source = downloadingVM
-            //    });
-            //dlg.Buttons = new[] { dlg.OkButton, dlg.CancelButton };
-
-            //Task.Run(async () =>
-            //{
-            //    try
-            //    {
-            //        await downloadingVM.DownloadFile(video, saveFileDialog.FileName);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        await _DialogService.ShowError(ex, "Error downloading", "OK", () => { });
-            //    }
-            //});
-
-            //if (dlg.ShowDialog() != true)
-            //{
-            //    downloadingVM.CancelDownload();
-            //}
+            var vm = _downloadViewModelFactory();
+            var dialogTask = DialogHost.Show(vm);
+            var downloadTask = vm.StartDownloadAsync(video, saveFileDialog.FileName);
+            await dialogTask;
+            await downloadTask;
         }
     }
     private static bool CanDownloadFile(IStreamInfo? video) => video != null;

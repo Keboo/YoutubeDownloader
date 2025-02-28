@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,7 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Velopack;
+
 using YoutubeDownloader.About;
+using YoutubeDownloader.Download;
 
 namespace YoutubeDownloader;
 
@@ -22,6 +24,8 @@ public partial class App : Application
     [STAThread]
     private static void Main(string[] args)
     {
+        VelopackApp.Build().Run();
+
         MainAsync(args).GetAwaiter().GetResult();
     }
 
@@ -49,6 +53,7 @@ public partial class App : Application
             services.AddSingleton<MainWindowViewModel>();
 
             services.AddFactory<AboutViewModel>();
+            services.AddFactory<DownloadViewModel>();
 
             services.AddSingleton<WeakReferenceMessenger>();
             services.AddSingleton<IMessenger, WeakReferenceMessenger>(provider => provider.GetRequiredService<WeakReferenceMessenger>());
